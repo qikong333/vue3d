@@ -1,26 +1,26 @@
-import * as dat from 'dat.gui';
-import { ref } from 'vue';
+import * as dat from 'dat.gui'
+import { ref } from 'vue'
 
-import light from './group/light';
+import light from './group/light'
 
 export default (props: any) => {
-  const guiContainerRef = ref();
+  const guiContainerRef = ref()
 
-  const gui = new dat.GUI();
-  const guiContainer = document.createElement('div');
+  const gui = new dat.GUI()
+  const guiContainer = document.createElement('div')
 
-  light(gui, props);
+  light(gui, props)
 
-  guiContainerRef.value = guiContainer;
-  document.body.appendChild(guiContainer);
-  guiContainer.appendChild(gui.domElement);
+  guiContainerRef.value = guiContainer
+  document.body.appendChild(guiContainer)
+  guiContainer.appendChild(gui.domElement)
 
   // 添加样式
-  guiContainer.style.position = 'fixed';
-  guiContainer.style.top = '0px';
-  guiContainer.style.right = '0px';
-  guiContainer.style.zIndex = '9999';
-};
+  guiContainer.style.position = 'fixed'
+  guiContainer.style.top = '0px'
+  guiContainer.style.right = '0px'
+  guiContainer.style.zIndex = '9999'
+}
 
 // const imageControl = {
 //     setImage: () => {

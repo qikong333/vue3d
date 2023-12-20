@@ -1,32 +1,28 @@
-import { ref, watchEffect } from 'vue';
+import { ref, watchEffect } from 'vue'
 
 export default () => {
   // const { loadModel } = useModels()
   const canvas = ref({
-    id: '',
-  });
+    id: ''
+  })
   const model = ref({
     name: 'model',
-    url: '',
-  });
+    url: ''
+  })
 
   watchEffect(() => {
     if (model.value.url) {
-      console.log(model.value.name);
-      console.log('11112123123123');
-      console.log(model.value.url);
-
       // loadModel()
     }
-  });
+  })
 
   function setCanvas(v: any) {
-    canvas.value = v;
+    canvas.value = v
   }
 
   return {
     model,
     canvas,
-    setCanvas,
-  };
-};
+    setCanvas
+  }
+}

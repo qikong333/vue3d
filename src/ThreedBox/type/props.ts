@@ -1,21 +1,22 @@
-import { MaterialProps } from './materialProps';
+import { MaterialProps } from './materialProps'
 
 export interface Props {
-  id?: string;
-  width?: number;
-  height?: number;
-  url?: string;
+  id?: string
+  width?: number
+  height?: number
+  url: string
   callback?: {
-    afterLoadModel?: () => void;
-    afterLoadMaterial?: () => void;
-  };
+    afterLoadModel?: () => void
+    afterLoadMaterial?: () => void
+  }
   canvas?: {
-    id: string;
-    width: number;
-    height: number;
-  };
-  material?: MaterialProps | MaterialProps[];
+    id: string
+    width: number
+    height: number
+  }
+  material?: MaterialProps | MaterialProps[]
   model?: {
-    url: string;
-  };
+    url: string
+  }
+  GUI?: boolean
 }

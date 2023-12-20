@@ -1,58 +1,62 @@
-import { onDeactivated, reactive, watchEffect } from 'vue';
+import { onDeactivated, reactive, watchEffect } from 'vue'
 
-import useGUI from './GUI';
-import useCamera from './hooks/useCamera';
-import useData from './hooks/useData';
-import useLight from './hooks/useLight';
-import useMaterial from './hooks/useMaterial';
-import useModels from './hooks/useModels';
-import useRender from './hooks/useRender';
-import useScene from './hooks/useScene';
-import { Props } from './type/props';
-import getSize from './utils/getSize';
+import useGUI from './GUI'
+import useCamera from './hooks/useCamera'
+import useData from './hooks/useData'
+import useLight from './hooks/useLight'
+import useMaterial from './hooks/useMaterial'
+import useModels from './hooks/useModels'
+import useRender from './hooks/useRender'
+import useScene from './hooks/useScene'
+import { Props } from './type/props'
+import getSize from './utils/getSize'
+import useRaycaster from './hooks/useRaycaster'
 
 export default (props: Props) => {
-  const size = getSize(props);
+  const size = getSize(props)
 
   const loads = reactive({
     loading: 0,
     loadedModel: false,
-    loadedMaterial: false,
-  });
+    loadedMaterial: false
+  })
 
   // const props = reactive<Props>(prop)
 
-  const { renderer, screenshot } = useRender(props);
-  const div = document.createElement('div');
-  div.style.width = size.width + 'px';
-  div.style.height = size.height + 'px';
-  div.appendChild(renderer.domElement);
+  const { renderer, screenshot } = useRender(props)
+  const div = document.createElement('div')
+  div.style.width = size.width + 'px'
+  div.style.height = size.height + 'px'
+  div.style.position = 'relative'
 
-  const { scene, changeSceneBg } = useScene();
-  const { ambientLight, hemisphereLight, diffuseLight } = useLight(scene);
-  const { camera, controls } = useCamera(renderer, props);
-  const { loadModel } = useModels(scene);
-  loadModel({ props, loads });
+  div.appendChild(renderer.domElement)
+
+  const { scene, changeSceneBg } = useScene()
+  const { ambientLight, hemisphereLight, diffuseLight } = useLight(scene)
+  const { camera, controls, setCameraDirection, setCameraFov } = useCamera(renderer, props)
+  const { loadModel, getMaterialNames } = useModels(scene, div)
+  loadModel({ props, loads })
 
   const useMaterialFunc = useMaterial({
     scene,
     props,
     loads,
-  });
-  const { MultipleRender, SingleRender } = useMaterialFunc;
+    div
+  })
+  const { MaterialRender, SingleRender } = useMaterialFunc
 
   watchEffect(() => {
     if (loads.loadedModel) {
       if (Array.isArray(props.material)) {
-        MultipleRender(props.material);
+        MaterialRender(props.material)
       } else {
-        SingleRender(props.material);
+        SingleRender(props.material)
       }
     }
 
     // if (props.material) {
     // }
-  });
+  })
 
   // const geometry = new THREE.BoxGeometry(1, 1, 1)
   // const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 })
@@ -61,25 +65,28 @@ export default (props: Props) => {
 
   changeSceneBg({
     value: '#fff',
-    type: 'color',
-  });
+    type: 'color'
+  })
+
+  useRaycaster(scene, camera, props)
 
   // const { composer } = useEffectComposer(renderer, scene, camera, props)
 
   function animate() {
-    requestAnimationFrame(animate);
-    controls.update();
+    requestAnimationFrame(animate)
+    controls.update()
 
-    renderer.render(scene, camera);
+    renderer.render(scene, camera)
     // composer.render()
   }
-  animate();
+
+  animate()
   if (props.id) {
-    document.getElementById(props.id)?.appendChild(div);
+    document.getElementById(props.id)?.appendChild(div)
   }
 
-  onWindowResize();
-  window.addEventListener('resize', onWindowResize);
+  onWindowResize()
+  window.addEventListener('resize', onWindowResize)
   function onWindowResize() {
     // // 获取窗口的宽度和高度
     // const width = size.width
@@ -92,35 +99,39 @@ export default (props: Props) => {
     //     camera.updateProjectionMatrix()
     // }
 
-    useGUI({
-      ambientLight,
-      camera,
-      controls,
-      hemisphereLight,
-      diffuseLight,
-      scene,
-      renderer,
-    });
+    props.GUI &&
+      useGUI({
+        ambientLight,
+        camera,
+        controls,
+        hemisphereLight,
+        diffuseLight,
+        scene,
+        renderer
+      })
   }
 
   // 销毁
   onDeactivated(() => {
-    console.log(11111321);
-    renderDispose();
-  });
+    console.log(11111321)
+    renderDispose()
+  })
 
   function renderDispose() {
-    console.log(11111321);
+    console.log(11111321)
 
     scene.children.forEach(function (object) {
-      scene.remove(object);
-    });
-    renderer.forceContextLoss();
+      scene.remove(object)
+    })
+    renderer.forceContextLoss()
   }
 
   return {
     useData: useData(),
     screenshot: () => screenshot(scene, camera),
     ...useMaterialFunc,
-  };
-};
+    setCameraDirection,
+    setCameraFov,
+    getMaterialNames
+  }
+}

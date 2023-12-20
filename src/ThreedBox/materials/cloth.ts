@@ -1,4 +1,4 @@
-import * as THREE from 'three';
+import * as THREE from 'three'
 
 export default {
   transparent: true,
@@ -19,10 +19,10 @@ export default {
   depthTest: true, // 深度测试开启
   dithering: true, // 抖动开启
   clearcoatNormalScale: new THREE.Vector2(1, 1), // 透明面漆法线贴图缩放
-  normalScale: new THREE.Vector2(1, 1), // 法线贴图缩放
+  normalScale: new THREE.Vector2(-0.8, -0.8), // 法线贴图缩放
   displacementScale: 0.4, // 置换贴图缩放
   shadowSide: THREE.DoubleSide,
-  opacity: 1,
+  opacity: 1
   // lightMapIntensity: 0.5,
   // flatShading: true,
-};
+}
